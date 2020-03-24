@@ -15,7 +15,7 @@ namespace InvaxTechnology.Models
         public string LastName { get; set; }
 
         [Display(Name = "Email Address")]
-        public string Email { get; set; }
+        public string EmailAddress { get; set; }
     }
 
     /// <summary>
