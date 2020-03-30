@@ -2,8 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using InvaxTechnology.Data;
-using InvaxTechnology.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -16,45 +14,10 @@ namespace InvaxTechnology
 {
     public class Startup
     {
-        public IConfiguration Configuration { get; }
-        public IHostEnvironment Environment { get; }
-
-        public Startup(IHostEnvironment environment)
-        {
-            Environment = environment;
-            var builder = new ConfigurationBuilder().AddEnvironmentVariables();
-            builder.AddUserSecrets<Startup>();
-            Configuration = builder.Build();
-        }
-
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddRazorPages();
-
-            services.AddControllersWithViews();
-
-            string userConnString = Environment.IsDevelopment()
-                ? Configuration["ConnectionStrings:UserConnection"]
-                : Configuration["ConnectionStrings:UserProductionConnection"];
-
-            string productConnString = Environment.IsDevelopment()
-                ? Configuration["ConnectionStrings:ProductConnection"]
-                : Configuration["ConnectionStrings:ProductProductionConnection"];
-
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(userConnString));
-
-            services.AddDbContext<StoreDbContext>(options =>
-                options.UseSqlServer(productConnString));
-
-            services.AddIdentity<ApplicationUser, IdentityRole>()
-                 .AddEntityFrameworkStores<ApplicationDbContext>()
-                 .AddDefaultTokenProviders();
-
-            services.AddAuthorization(options =>
-            options.AddPolicy("AdminOnly", policy => policy.RequireRole(ApplicationRoles.Admin)));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -65,21 +28,21 @@ namespace InvaxTechnology
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseStaticFiles();
+            //app.UseStaticFiles();
 
             app.UseRouting();
 
-            app.UseAuthentication();
+            //app.UseAuthentication();
 
-            app.UseAuthorization();
+            //app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapRazorPages();
-                endpoints.MapDefaultControllerRoute();
+                endpoints.MapGet("/", async context =>
+                {
+                    await context.Response.WriteAsync("Hello World!");
+                });
             });
-
-            RoleInitializer.SeedData(serviceProvider);
         }
     }
 }
