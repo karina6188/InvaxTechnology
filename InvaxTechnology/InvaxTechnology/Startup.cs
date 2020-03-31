@@ -30,7 +30,7 @@ namespace InvaxTechnology
                 app.UseDeveloperExceptionPage();
             }
 
-            //app.UseStaticFiles();
+            app.UseStaticFiles();
 
             app.UseRouting();
 
